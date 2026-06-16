@@ -117,6 +117,13 @@
   details.aside .inner li{margin:7px 0; font-size:14.5px; line-height:1.8}
   details.aside .inner h4{margin:14px 0 4px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--secondary)}
 
+  /* Capturas */
+  figure.shot{margin:18px 0; text-align:center}
+  figure.shot img{max-width:100%; height:auto; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); background:var(--tint)}
+  figure.shot.sm img{width:auto; max-width:min(100%,470px)}
+  figure.shot figcaption{margin:9px auto 0; max-width:52ch; font-size:13.5px; color:var(--secondary); line-height:1.6}
+  figure.shot figcaption strong{color:var(--text); font-weight:700}
+
   /* Golden rules */
   .rules{counter-reset:r; margin:14px 0; display:flex; flex-direction:column; gap:2px}
   .rules .r{counter-increment:r; display:flex; gap:13px; padding:12px 14px; border-left:2px solid var(--text); font-size:15px; line-height:1.8; color:var(--paragraph)}
@@ -254,6 +261,10 @@
               <li><strong>Clic derecho:</strong> abre un menú de opciones. <span class="only-mac">En un portátil Mac: toca con <strong>dos dedos a la vez</strong> en el trackpad (o mantén <kbd>Control</kbd> y haz clic).</span><span class="only-win">Es el botón de la derecha del ratón; en portátil, pulsa la esquina inferior derecha del trackpad o con <strong>dos dedos</strong>.</span></li>
               <li><strong>Arrastrar y soltar:</strong> pulsa el botón <em>encima</em> de algo, mantenlo apretado mientras mueves, y suelta donde quieras dejarlo.</li>
             </ul>
+            <figure class="shot sm">
+              <img src="img/clic-derecho.webp" alt="Ejemplo de menú al hacer clic derecho en VS Code" loading="lazy" width="700" height="657">
+              <figcaption>Ejemplo de menú que aparece al hacer <strong>clic derecho</strong>.</figcaption>
+            </figure>
             <h4>Internet y archivos</h4>
             <ul>
               <li><strong>El navegador:</strong> el programa con el que entras a internet (Chrome, Safari, Edge o Firefox). Es donde estás leyendo esto.</li>
@@ -416,7 +427,10 @@
       <h2 class="item-title"><span class="n">5 ·</span> La interfaz: qué estás viendo</h2>
       <div class="content">
         <p>La pantalla se divide en zonas fijas. No hay que aprenderse nada de memoria: con la <em>Paleta de Comandos</em> encuentras cualquier cosa escribiendo su nombre.</p>
-        <!-- Mejora futura: aquí encaja una captura anotada de VS Code con flechas a cada zona -->
+        <figure class="shot">
+          <img src="img/interfaz.webp" alt="Ventana de VS Code con un proyecto abierto" loading="lazy" width="1500" height="948">
+          <figcaption>La ventana de VS&nbsp;Code: a la izquierda la columna de iconos (<strong>Activity Bar</strong>) y la lista de archivos (<strong>Explorer</strong>); en el centro el <strong>editor</strong>; abajo del todo, la <strong>barra de estado</strong> con la rama <code>main</code> a la izquierda y <strong>Go&nbsp;Live</strong> a la derecha.</figcaption>
+        </figure>
         <div class="defs">
           <div class="def"><span class="k">Activity Bar<br><span style="font-weight:400;color:var(--muted);font-size:.85em">barra de actividad</span></span><span class="v">La columna estrecha de <strong>iconos pegada al borde izquierdo</strong>. Cada icono cambia qué se muestra al lado: archivos, búsqueda, control de cambios, extensiones.</span></div>
           <div class="def"><span class="k">Explorer<br><span style="font-weight:400;color:var(--muted);font-size:.85em">explorador</span></span><span class="v">Icono de dos hojas. Es la <strong>lista de carpetas y archivos</strong> de tu web. Haz clic en uno para abrirlo.</span></div>
@@ -440,6 +454,11 @@
         <label class="check"><input type="checkbox" data-step="ed-3"><span class="ctext">Mira la pestaña de arriba: al cambiar algo, la <strong>X</strong> de cerrar se convierte en un <strong>punto redondo ●</strong> = <strong>cambios SIN GUARDAR</strong>.</span></label>
         <label class="check"><input type="checkbox" data-step="ed-4"><span class="ctext">Pulsa <kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd> para guardar (el punto vuelve a ser X). ¿Te equivocaste? <kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd> deshace.</span></label>
 
+        <figure class="shot sm">
+          <img src="img/pestana-sin-guardar.webp" alt="Pestaña de un archivo con un punto redondo de cambios sin guardar" loading="lazy" width="414" height="254">
+          <figcaption>El <strong>punto redondo ●</strong> en la pestaña avisa de que hay <strong>cambios sin guardar</strong>. Al guardar (<kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd>) vuelve a ser una X.</figcaption>
+        </figure>
+
         <div class="note"><span class="lab">🗺️ ¿y qué archivo toco para cambiar cada cosa?</span><p>Eso depende de tu web, así que es lo primero que conviene pedirle a tu técnico: una lista corta del tipo «para cambiar los precios, edita tal archivo; para las fotos, tal carpeta». Apúntala aquí:</p><p style="color:var(--muted)">· ____________________ → ____________________<br>· ____________________ → ____________________</p><p>Truco para no romper nada: cambia <strong>solo el texto</strong> que ya ves en tu web, sin tocar lo que tiene alrededor (los símbolos <code>&lt; &gt;</code> ni los nombres entre comillas). Si solo reescribes palabras, es muy difícil estropear algo.</p></div>
 
         <div class="note"><span class="lab">💾 guardar a mano es lo más seguro</span><p>Existe un guardado automático (menú <strong>File → Auto Save</strong>), pero si tocas archivos <code>.json</code> es mejor <strong>dejarlo desactivado</strong> y guardar tú con <kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd> cuando hayas revisado el cambio.</p></div>
@@ -460,10 +479,20 @@
         <label class="check"><input type="checkbox" data-step="ls-2"><span class="ctext">En el buscador escribe <strong>Live Server</strong>.</span></label>
         <label class="check"><input type="checkbox" data-step="ls-3"><span class="ctext">Elige el que se llama exactamente <strong>«Live Server»</strong> y cuyo autor es <strong>Ritwick Dey</strong> (millones de instalaciones). Cuidado con imitaciones.</span></label>
         <label class="check"><input type="checkbox" data-step="ls-4"><span class="ctext">Pulsa el botón azul <strong>Install</strong> (instalar). Listo en segundos.</span></label>
+        <figure class="shot">
+          <img src="img/extensions-live-server.webp" alt="Vista de extensiones con Live Server de Ritwick Dey" loading="lazy" width="1200" height="472">
+          <figcaption>La extensión correcta: <strong>«Live Server»</strong> de <strong>Ritwick Dey</strong>. Pulsa <strong>Install</strong>.</figcaption>
+        </figure>
+
         <h3>Usarlo</h3>
         <label class="check"><input type="checkbox" data-step="ls-5"><span class="ctext">Con tu carpeta abierta, <strong>abajo a la derecha</strong> verás el botón <strong>«Go Live»</strong> (literalmente «ponerlo en directo», pero ojo: solo en tu pantalla, no en internet). Haz clic.</span></label>
         <label class="check"><input type="checkbox" data-step="ls-6"><span class="ctext">Se abre el navegador en una dirección tipo <code>http://127.0.0.1:5500</code>. <strong>Es solo tu ordenador</strong>; nadie de fuera la ve.</span></label>
         <label class="check"><input type="checkbox" data-step="ls-7"><span class="ctext">A partir de ahora, al <strong>guardar</strong> (<kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd>) la página se actualiza sola. Para apagarlo, pulsa el botón que ahora pone <strong>«Port: 5500»</strong> en esa misma esquina (no necesitas saber qué es un «puerto»).</span></label>
+        <figure class="shot sm">
+          <img src="img/go-live.webp" alt="Botón Go Live en la barra de estado, abajo a la derecha" loading="lazy" width="456" height="246">
+          <figcaption>El botón <strong>«Go Live»</strong>, abajo a la derecha en la barra de estado.</figcaption>
+        </figure>
+
         <div class="note"><span class="lab">🖱️ ¿no ves «Go Live»?</span><p>Asegúrate de tener abierto un archivo <code>.html</code>. Alternativa que siempre funciona: <strong>clic derecho sobre <code>index.html</code></strong> → <strong>«Open with Live Server»</strong> (abrir con Live Server). Si no lo apagas, tampoco pasa nada: se cierra solo al cerrar VS Code.</p></div>
         <div class="note calm"><p>Live Server <strong>no toca tu código ni publica nada</strong>: solo te enseña la web en tu pantalla. Para que el mundo la vea, hay que subirla a GitHub (paso 8).</p></div>
       </div>
@@ -474,7 +503,10 @@
       <h2 class="item-title"><span class="n">8 ·</span> Guardar tu cambio en GitHub <span class="tag">commit + subir</span></h2>
       <div class="content">
         <p>Este es el paso que <strong>publica de verdad</strong>. Todo se hace con botones, sin escribir comandos. Son dos gestos: <strong>confirmar (commit)</strong> y <strong>subir (Sync Changes)</strong>.</p>
-        <!-- Mejora futura: 2-3 capturas anotadas del panel Source Control (caja Message + botón Commit, aviso de smart commit, botón Sync Changes). Es donde más se atasca la gente. -->
+        <figure class="shot sm">
+          <img src="img/source-control.webp" alt="Panel Source Control con la caja Message y el botón Commit" loading="lazy" width="625" height="490">
+          <figcaption>El panel <strong>Source Control</strong>: la caja <strong>«Message»</strong>, el botón azul <strong>«Commit»</strong> y, abajo, la lista <strong>«Changes»</strong> con el archivo que tocaste.</figcaption>
+        </figure>
 
         <div class="note warn"><span class="lab">🔑 requisito: estar dentro de tu cuenta de GitHub</span><p>Pulsa el icono de <strong>persona</strong> (<em>Accounts</em>, «cuentas») abajo a la izquierda → <strong>«Sign in with GitHub»</strong> (iniciar sesión con GitHub). Se abre el navegador; si no habías entrado, te pedirá usuario y contraseña (y quizá un código de tu móvil). Al final verás una pantalla <strong>«Authorize»</strong> (autorizar): es <strong>normal y segura</strong> — solo le das permiso a tu propio VS Code para hablar con tu GitHub.</p><p>Puede que el navegador diga <em>«You may now close this window»</em> (ya puedes cerrar esta ventana) o pregunte <em>«¿Abrir Visual Studio Code?»</em>: di que <strong>sí</strong>. Es normal que la pantalla salte entre el navegador y VS Code; no has hecho nada mal. Para volver a un programa, búscalo en <span class="only-mac">el Dock (abajo)</span><span class="only-win">la barra de tareas (abajo)</span> y haz clic.</p></div>
 
@@ -486,6 +518,19 @@
         <label class="check"><input type="checkbox" data-step="up-6"><span class="ctext">Puede salir un aviso en inglés: <em>«There are no staged changes to commit…?»</em> (algo así como: «no has seleccionado archivos, ¿confirmo todos?»). <strong>Es totalmente normal, no es un error.</strong> Aunque veas varios botones (<em>Yes</em>=sí, <em>Always</em>=siempre, <em>Never</em>=nunca), tú pulsa <strong>«Yes»</strong>.</span></label>
         <label class="check"><input type="checkbox" data-step="up-7"><span class="ctext">El botón azul cambia a <strong>«Sync Changes»</strong> (sincronizar / subir cambios). <strong>Púlsalo: este es el que sube tu cambio a GitHub.</strong></span></label>
         <label class="check"><input type="checkbox" data-step="up-8"><span class="ctext"><strong>Solo la primera vez</strong> de un proyecto, en su lugar puede poner <strong>«Publish Branch»</strong> (publicar rama; «rama» = tu versión del proyecto). Púlsalo igual: hace lo mismo que Sync Changes. Si pregunta entre <em>público</em> y <em>privado</em>, elige lo que te dijo tu técnico (ante la duda, pregúntale).</span></label>
+
+        <figure class="shot sm">
+          <img src="img/aviso-commit.webp" alt="Aviso en inglés: There are no staged changes to commit" loading="lazy" width="900" height="880">
+          <figcaption>El aviso de la casilla 6: <strong>no es un error</strong>, pulsa <strong>«Yes»</strong>.</figcaption>
+        </figure>
+        <figure class="shot sm">
+          <img src="img/sync-changes.webp" alt="Botón Sync Changes" loading="lazy" width="772" height="488">
+          <figcaption>Tras el commit, el botón pasa a <strong>«Sync Changes»</strong>: púlsalo para subir a GitHub.</figcaption>
+        </figure>
+        <figure class="shot sm">
+          <img src="img/pull-push.webp" alt="Aviso: This action will pull and push commits" loading="lazy" width="720" height="664">
+          <figcaption>Puede salir esta confirmación: pulsa <strong>«OK»</strong>. ¡Y listo, subido!</figcaption>
+        </figure>
 
         <div class="note rule"><span class="lab">⭐ no confundas estos dos</span><p><strong>Commit</strong> = guardar una foto <em>en tu ordenador</em>. &nbsp;·&nbsp; <strong>Sync Changes</strong> = subirla a GitHub (y publicarla). Si solo haces <em>Commit</em>, en internet <strong>no se ve</strong> el cambio.</p></div>
 
