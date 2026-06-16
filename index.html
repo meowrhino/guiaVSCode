@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="description" content="Guía para clientes: cómo abrir VS Code, editar tu web estática y publicarla en GitHub, paso a paso y sin saber programar.">
+<meta name="author" content="meowrhino.studio">
+<title>Guía — actualizar tu web con VS Code</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --text:#000; --muted:#999; --secondary:#888; --paragraph:#2e2e2e;
+    --border:rgba(0,0,0,.12); --border-hover:rgba(0,0,0,.35);
+    --radius:4px; --shadow:0 1px 2px rgba(0,0,0,.05); --shadow-hover:0 4px 8px rgba(0,0,0,.08);
+    --accent:#000; --accent-light:rgba(0,0,0,.04); --tint:rgba(0,0,0,.03); --tint2:rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:18px}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inknut Antiqua', Georgia, 'Times New Roman', serif;
+    -webkit-font-smoothing:antialiased; line-height:1.75;
+  }
+  /* OS switching */
+  html.os-win .only-mac{display:none}
+  html.os-mac .only-win{display:none}
+  html.os-win kbd.mac{display:none}
+  html.os-mac kbd.win{display:none}
+
+  .container{width:min(740px, 90vw); margin:0 auto; padding:8dvh 0 7dvh}
+
+  a{color:var(--text); text-decoration:none; border-bottom:1px solid rgba(0,0,0,.25)}
+  a:hover{border-bottom-color:var(--text)}
+
+  /* Hero */
+  .hero{margin-bottom:30px}
+  .hero h1{margin:0; font-size:clamp(24px,4.5dvw,34px); font-weight:700; letter-spacing:-.015em; line-height:1.25}
+  .hero .subtitle{margin:12px 0 0; font-size:clamp(13px,1.6dvw,15px); font-weight:300; color:var(--secondary); line-height:1.75; max-width:54ch}
+  .hero .meta{margin:10px 0 0; font-size:11px; font-weight:300; color:var(--muted); letter-spacing:.04em; text-transform:lowercase}
+  .breathe{display:inline-block; margin-top:18px; font-size:12.5px; font-weight:400; color:var(--secondary); border:1px solid var(--border); border-radius:999px; padding:7px 15px}
+
+  /* Toolbar */
+  .toolbar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:22px 0 0}
+  .toolbar .lbl{font-size:11px; color:var(--muted); text-transform:lowercase; letter-spacing:.04em; font-weight:400}
+  .switch{display:inline-flex; border:1px solid var(--border); border-radius:999px; padding:3px; gap:2px}
+  .switch button{border:0; background:transparent; color:var(--muted); font-family:inherit; font-size:12px; font-weight:600; padding:5px 14px; border-radius:999px; cursor:pointer; line-height:1}
+  .switch button.active{background:var(--accent); color:#fff}
+
+  /* Índice */
+  .toc{margin:30px 0 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0}
+  .toc h2{margin:0 0 10px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .toc ol{margin:0; padding:0; list-style:none; counter-reset:t; columns:2; column-gap:28px}
+  .toc li{counter-increment:t; margin:3px 0; font-size:13px; break-inside:avoid}
+  .toc a{display:inline-flex; gap:8px; color:var(--paragraph); border:0}
+  .toc a:before{content:counter(t); color:var(--muted); font-variant-numeric:tabular-nums; min-width:14px; text-align:right}
+  .toc a:hover{color:var(--text)}
+
+  /* Stack + items */
+  .stack{display:flex; flex-direction:column; gap:44px; margin-top:44px}
+  .item{scroll-margin-top:18px}
+  .item-title{margin:0; font-size:clamp(17px,3dvw,21px); font-weight:600; letter-spacing:-.01em; padding-bottom:10px; border-bottom:1px solid var(--border)}
+  .item-title .n{color:var(--muted); font-weight:400}
+  .item-title .tag{font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); border:1px solid var(--border); border-radius:999px; padding:2px 9px; margin-left:8px; vertical-align:middle; white-space:nowrap}
+  .content{margin-top:14px}
+  .content p{margin:0 0 12px; font-size:14px; line-height:1.8; color:var(--paragraph); font-weight:400}
+  .content h3{margin:24px 0 8px; font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+  .content ul{padding-left:20px; margin:8px 0 12px}
+  .content ul li{font-size:14px; line-height:1.8; color:var(--paragraph); margin:5px 0}
+  strong{font-weight:700}
+  em{font-style:italic}
+
+  /* Checklist */
+  .check{display:flex; align-items:flex-start; gap:11px; padding:9px 12px; margin:2px 0; border-radius:var(--radius); cursor:pointer; transition:background .15s ease; font-size:14px; line-height:1.75; color:var(--paragraph)}
+  .check:hover{background:var(--accent-light)}
+  .check input[type=checkbox]{appearance:none;-webkit-appearance:none; width:18px;height:18px;min-width:18px; border:1.5px solid var(--border); border-radius:3px; margin:4px 0 0; cursor:pointer; position:relative; transition:all .15s ease; background:#fff}
+  .check input[type=checkbox]:hover{border-color:var(--border-hover)}
+  .check input[type=checkbox]:checked{background:var(--accent); border-color:var(--accent)}
+  .check input[type=checkbox]:checked::after{content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:700; color:#fff; line-height:1}
+  .check:has(input:checked) .ctext{color:var(--muted); text-decoration:line-through; text-decoration-color:rgba(0,0,0,.2)}
+  .ctext{flex:1}
+
+  /* Notes / callouts (monochrome, differentiated by weight + label) */
+  .note{border-left:2px solid var(--border); padding:10px 16px; margin:14px 0; font-size:13px; line-height:1.75; color:var(--paragraph)}
+  .note p{margin:0 0 7px; font-size:13px !important; line-height:1.75}
+  .note p:last-child{margin:0}
+  .note .lab{display:block; font-weight:600; text-transform:uppercase; letter-spacing:.06em; font-size:10.5px; color:var(--muted); margin-bottom:5px}
+  .note.rule{border-left-color:var(--text)}
+  .note.warn{border-left-width:3px; border-left-color:var(--text); background:var(--tint)}
+  .note.calm{background:var(--tint); border-left-color:var(--border)}
+
+  /* Golden rules */
+  .rules{counter-reset:r; margin:14px 0; display:flex; flex-direction:column; gap:2px}
+  .rules .r{counter-increment:r; display:flex; gap:13px; padding:11px 14px; border-left:2px solid var(--text); font-size:13.5px; line-height:1.75; color:var(--paragraph)}
+  .rules .r:before{content:counter(r); font-weight:700; color:var(--text); font-variant-numeric:tabular-nums}
+
+  /* Definition rows (interfaz / palabras) */
+  .defs{display:flex; flex-direction:column; gap:2px; margin:12px 0}
+  .def{display:grid; grid-template-columns:140px 1fr; gap:6px 16px; padding:9px 12px; border-radius:var(--radius); font-size:13.5px; line-height:1.7}
+  .def:hover{background:var(--accent-light)}
+  .def .k{font-weight:600}
+  .def .v{color:var(--paragraph)}
+  @media (max-width:520px){.def{grid-template-columns:1fr; gap:2px}}
+
+  /* kbd & code */
+  kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; font-weight:600; background:#fff; border:1px solid var(--border); border-bottom-width:2px; border-radius:4px; padding:2px 6px; white-space:nowrap; margin:0 1px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:.85em; background:var(--accent-light); padding:1px 5px; border-radius:3px}
+
+  /* download link */
+  .dl{display:flex; align-items:center; gap:10px; flex-wrap:wrap; border:1px solid var(--border); border-radius:var(--radius); padding:11px 14px; margin:12px 0; background:var(--tint)}
+  .dl .url{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:14px; font-weight:600}
+  .dl .copy{margin-left:auto; border:1px solid var(--border); background:#fff; color:var(--secondary); font-family:inherit; font-size:11px; font-weight:600; padding:5px 12px; border-radius:var(--radius); cursor:pointer}
+  .dl .copy:hover{border-color:var(--border-hover); color:var(--text)}
+
+  /* table */
+  .table-wrap{overflow:auto; margin:12px 0; border:1px solid var(--border); border-radius:var(--radius)}
+  table{width:100%; border-collapse:collapse; min-width:380px}
+  th{text-align:left; padding:10px 13px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); border-bottom:1px solid var(--border); background:rgba(0,0,0,.02)}
+  td{text-align:left; padding:9px 13px; border-bottom:1px solid rgba(0,0,0,.06); font-size:13px; line-height:1.6; vertical-align:top}
+  tr:last-child td{border-bottom:none}
+
+  /* FAQ */
+  .faq{margin:8px 0 0}
+  details{border-bottom:1px solid var(--border)}
+  details:last-child{border-bottom:none}
+  summary{padding:13px 0; font-size:14px; font-weight:600; cursor:pointer; list-style:none; display:flex; gap:8px; align-items:baseline; color:var(--text)}
+  summary::-webkit-details-marker{display:none}
+  summary:before{content:'+'; font-weight:400; color:var(--muted); width:14px; display:inline-block}
+  details[open] summary:before{content:'−'}
+  summary .qtag{margin-left:auto; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); border:1px solid var(--border); border-radius:999px; padding:2px 8px; white-space:nowrap}
+  .faq .ans{padding:0 0 14px 22px; font-size:13px; line-height:1.8; color:var(--paragraph)}
+  .faq .ans p{margin:0 0 8px} .faq .ans ul{margin:6px 0; padding-left:18px} .faq .ans li{margin:5px 0; font-size:13px}
+
+  /* progress + restart */
+  .endbar{margin-top:54px; padding-top:22px; border-top:1px solid var(--border); text-align:center}
+  .progress{font-size:11px; color:var(--muted); letter-spacing:.04em; text-transform:lowercase; margin:0 0 12px}
+  .restart{appearance:none; border:1px solid var(--border); background:#fff; color:var(--secondary); font-family:inherit; font-size:11px; font-weight:600; padding:8px 20px; border-radius:var(--radius); cursor:pointer; letter-spacing:.03em; transition:all .15s ease}
+  .restart:hover{border-color:var(--border-hover); color:var(--text); transform:translateY(-1px); box-shadow:var(--shadow-hover)}
+
+  /* footer */
+  .footer{margin-top:40px; text-align:center; color:var(--muted); font-size:11px; line-height:1.7}
+  .footer .sig{display:inline-block; font-weight:600; font-size:12px; color:var(--muted); letter-spacing:.12em; text-transform:lowercase; border:0}
+  .footer .sig:hover{color:var(--text)}
+  .footer .extra{margin:8px 0 0; font-size:10.5px; font-weight:300; letter-spacing:.04em; opacity:.7; max-width:50ch; margin-left:auto; margin-right:auto}
+
+  .totop{position:fixed; right:18px; bottom:18px; opacity:0; pointer-events:none; transition:opacity .2s; background:#fff; color:var(--text); border:1px solid var(--border); width:42px; height:42px; border-radius:999px; cursor:pointer; font-size:17px; box-shadow:var(--shadow); z-index:30}
+  .totop.show{opacity:1; pointer-events:auto}
+
+  @media print{.toolbar,.toc,.totop,.endbar{display:none} a{border:0}}
+</style>
+<script>
+  /* Fija el sistema operativo antes de pintar (sin parpadeo) */
+  (function(){
+    try{
+      var os = localStorage.getItem('guia-os');
+      if(!os){ var p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||''; os=/win/i.test(p)?'win':'mac'; }
+      document.documentElement.classList.add(os==='win'?'os-win':'os-mac');
+    }catch(e){ document.documentElement.classList.add('os-mac'); }
+  })();
+</script>
+</head>
+<body>
+<main class="container">
+
+  <header class="hero">
+    <h1>Actualizar tu web con VS&nbsp;Code</h1>
+    <p class="subtitle">Has vuelto a tu web después de un tiempo y no te acuerdas de nada. Tranquila/o: aquí está todo, paso a paso y en cristiano. Desde instalar el programa hasta publicar tu cambio en internet. No necesitas saber programar.</p>
+    <p class="meta">guía de mantenimiento · última actualización: junio 2026</p>
+    <span class="breathe">🌿 Respira. No has roto nada. Casi todo se puede deshacer.</span>
+    <div class="toolbar">
+      <span class="lbl">tu ordenador:</span>
+      <div class="switch" role="group" aria-label="Sistema operativo">
+        <button id="btn-mac" onclick="setOS('mac')">Mac</button>
+        <button id="btn-win" onclick="setOS('win')">Windows</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Índice">
+    <h2>En esta guía</h2>
+    <ol>
+      <li><a href="#empezar">Antes de empezar</a></li>
+      <li><a href="#instalar-vscode">Instalar VS Code</a></li>
+      <li><a href="#instalar-git">Instalar Git</a></li>
+      <li><a href="#abrir">Abrir tu carpeta</a></li>
+      <li><a href="#interfaz">La interfaz</a></li>
+      <li><a href="#editar">Editar y guardar</a></li>
+      <li><a href="#liveserver">Ver la web en local</a></li>
+      <li><a href="#subir">Guardar en GitHub</a></li>
+      <li><a href="#comprobar">Comprobar que se publicó</a></li>
+      <li><a href="#cerrar">Cerrar y volver</a></li>
+      <li><a href="#problemas">Si algo se rompe</a></li>
+      <li><a href="#glosario">Glosario</a></li>
+    </ol>
+  </nav>
+
+  <div class="stack">
+
+    <!-- 1 -->
+    <section class="item" id="empezar">
+      <h2 class="item-title"><span class="n">1 ·</span> Antes de empezar</h2>
+      <div class="content">
+        <p>Cinco minutos de contexto que te ahorrarán muchos sustos. No hace falta leer la guía entera: usa el índice y ve directo a lo que necesites. Arriba tienes un interruptor <strong>Mac / Windows</strong>: púlsalo según tu ordenador y la guía te enseñará solo los pasos y atajos que te tocan.</p>
+
+        <h3>Qué necesitas tener a mano</h3>
+        <label class="check"><input type="checkbox" data-step="pre-1"><span class="ctext">Tu <strong>ordenador de siempre</strong>, donde tu técnico dejó preparada la web (esta guía da por hecho que el proyecto <em>ya está descargado y conectado a GitHub</em>).</span></label>
+        <label class="check"><input type="checkbox" data-step="pre-2"><span class="ctext">Tu <strong>cuenta de GitHub</strong> (usuario y contraseña). Si no la recuerdas, recupérala en <a href="https://github.com" target="_blank" rel="noopener">github.com</a> antes de empezar.</span></label>
+        <label class="check"><input type="checkbox" data-step="pre-3"><span class="ctext">Un rato: la primera vez, 10–15 minutos; luego, 2 minutos por cambio.</span></label>
+
+        <h3>Cuatro palabras que se parecen (y conviene no confundir)</h3>
+        <div class="defs">
+          <div class="def"><span class="k">Git</span><span class="v">El sistema que guarda las <strong>versiones</strong> de tu web <em>en tu ordenador</em>. Es un programa aparte que se instala una vez (paso 3).</span></div>
+          <div class="def"><span class="k">GitHub</span><span class="v">La <strong>web</strong> donde se guarda la copia online de tu proyecto, con todo su historial. Como un Google Drive especializado.</span></div>
+          <div class="def"><span class="k">GitHub Pages</span><span class="v">Lo que convierte esa copia en <strong>tu web pública</strong>. Subes un cambio y, en unos minutos, aparece online solo.</span></div>
+          <div class="def"><span class="k">VS Code</span><span class="v">El <strong>programa</strong> (gratis, de Microsoft) que abres para ver y editar los archivos de tu web. El protagonista de esta guía.</span></div>
+        </div>
+
+        <div class="note calm"><span class="lab">🧱 tu web es robusta</span><p>Es un <strong>sitio estático</strong>: un montón de archivos sencillos, sin base de datos que se pueda corromper. Aunque metas la pata en un archivo, el resto sigue funcionando y se arregla en un minuto.</p></div>
+
+        <h3>Las reglas de oro</h3>
+        <p>Si solo te quedas con una cosa de toda la guía, que sea esto:</p>
+        <div class="rules">
+          <div class="r"><div><strong>Guardar no es publicar.</strong> Guardar (<kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd>) solo afecta a tu ordenador. Tu web online no cambia hasta que la subes a GitHub.</div></div>
+          <div class="r"><div><strong>Confirmar (commit) tampoco es subir.</strong> El commit hace una foto en tu ordenador; lo que la publica es darle a <em>Sync&nbsp;Changes</em> (paso 8).</div></div>
+          <div class="r"><div><strong>Edita en un solo sitio a la vez.</strong> O en VS Code o en github.com, nunca en los dos sin sincronizar antes.</div></div>
+          <div class="r"><div><strong>Casi todo se puede deshacer.</strong> <kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd> mientras editas, y el historial de GitHub si ya está online.</div></div>
+          <div class="r"><div><strong>Ante la duda, no toques a lo loco.</strong> Cerrar sin guardar siempre es seguro. Y preguntar a tu técnico —con una captura— nunca es molestar.</div></div>
+        </div>
+
+        <div class="note"><span class="lab">📸 tu mejor herramienta</span><p>Si algo no se parece a esta guía o un mensaje te asusta, <strong>hazle una captura a la pantalla</strong> (<kbd class="mac">⌘⇧4</kbd><kbd class="win">Win+Mayús+S</kbd>) y mándasela a tu técnico. Es la forma más rápida de resolver cualquier duda.</p></div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="item" id="instalar-vscode">
+      <h2 class="item-title"><span class="n">2 ·</span> Instalar VS Code <span class="tag">por si acaso</span></h2>
+      <div class="content">
+        <p>Si ya lo tienes (icono azul con una cinta), salta al paso 4. Si no, instalarlo es como instalar cualquier app: gratis y en un par de minutos.</p>
+
+        <div class="note warn"><span class="lab">⚠️ descárgalo solo del sitio oficial</span><p>Hay copias falsas por internet. Entra únicamente en la web de abajo. Los avisos de seguridad de Mac o Windows al abrir un programa nuevo son <strong>normales</strong>: pulsa <em>Abrir</em> / <em>Ejecutar de todos modos</em> / <em>Sí</em>.</p></div>
+
+        <div class="dl"><span class="url">code.visualstudio.com</span><button class="copy" data-copy="https://code.visualstudio.com">copiar</button></div>
+
+        <div class="only-mac">
+          <h3>En Mac</h3>
+          <label class="check"><input type="checkbox" data-step="vsc-mac-1"><span class="ctext">Entra en <strong>code.visualstudio.com</strong> y pulsa el botón azul de descarga (detecta tu Mac). Si te deja elegir: chip Apple = <em>Apple silicon</em>, Mac antiguo = <em>Intel chip</em>; si dudas, <strong>Universal</strong>.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-mac-2"><span class="ctext">Doble clic en el archivo descargado (acaba en <code>.dmg</code>, en <em>Descargas</em>). Se abre una ventanita con el icono de VS Code.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-mac-3"><span class="ctext"><strong>Arrastra</strong> el icono de VS Code a la carpeta <strong>Aplicaciones</strong> que ves en esa ventana, y suelta.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-mac-4"><span class="ctext">Abre <strong>Finder → Aplicaciones</strong> y doble clic en <strong>Visual Studio Code</strong>. Si sale «¿Seguro que quieres abrirla?», pulsa <strong>Abrir</strong> (solo pasa la primera vez).</span></label>
+          <div class="note warn"><span class="lab">🍎 importante</span><p>Hay que <strong>arrastrarlo a Aplicaciones</strong>. Si lo abres desde la ventanita del <code>.dmg</code> sin arrastrarlo, al cerrarla parecerá que «se ha perdido».</p></div>
+        </div>
+
+        <div class="only-win">
+          <h3>En Windows</h3>
+          <label class="check"><input type="checkbox" data-step="vsc-win-1"><span class="ctext">Entra en <strong>code.visualstudio.com</strong> y pulsa el botón azul de descarga. Lo recomendado es <strong>User Installer</strong>: no pide contraseña de administrador.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-win-2"><span class="ctext">Abre el archivo descargado (<code>VSCodeUserSetup-x64-….exe</code>). Si Windows avisa, pulsa <strong>Más información → Ejecutar de todos modos</strong>, o <strong>Sí</strong>.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-win-3"><span class="ctext">Marca <strong>«Acepto el acuerdo»</strong> y pulsa <strong>Siguiente</strong> en cada pantalla; en «tareas adicionales» deja las casillas <strong>como vienen</strong>.</span></label>
+          <label class="check"><input type="checkbox" data-step="vsc-win-4"><span class="ctext">Pulsa <strong>Instalar</strong> y, al terminar, deja marcado <strong>«Ejecutar Visual Studio Code»</strong> y <strong>Finalizar</strong>.</span></label>
+        </div>
+
+        <div class="note calm"><p>Es <strong>100% gratis</strong> y oficial de Microsoft (no hay que pagar ni poner tarjeta). Ocupa poco y, si algo falla, se desinstala y se vuelve a empezar sin perder ningún dato de tu web.</p></div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="item" id="instalar-git">
+      <h2 class="item-title"><span class="n">3 ·</span> Instalar Git <span class="tag">por si acaso</span></h2>
+      <div class="content">
+        <p>Git es el motor que permite a VS Code subir tus cambios a GitHub. Normalmente ya viene instalado o tu técnico lo dejó puesto. Solo lo necesitas si VS Code te lo pide.</p>
+
+        <h3>Primero, comprueba si ya lo tienes (sin terminal)</h3>
+        <label class="check"><input type="checkbox" data-step="git-1"><span class="ctext">Abre VS Code y haz clic en el icono de <strong>Source Control</strong> (una ramita: tres puntos unidos por líneas) en la barra de iconos de la izquierda.</span></label>
+        <label class="check"><input type="checkbox" data-step="git-2"><span class="ctext">Si ves textos como <strong>«Changes»</strong>, una caja para escribir un mensaje o el nombre de tus archivos, <strong>ya tienes Git</strong>: salta al paso 4.</span></label>
+        <label class="check"><input type="checkbox" data-step="git-3"><span class="ctext">Solo si aparece literalmente un botón azul que dice <strong>«Download Git»</strong> (o <em>«Install Git»</em>) es que no lo tienes. En ese caso, sigue aquí abajo.</span></label>
+
+        <div class="dl"><span class="url">git-scm.com</span><button class="copy" data-copy="https://git-scm.com">copiar</button></div>
+
+        <label class="check"><input type="checkbox" data-step="git-4"><span class="ctext">Entra en <strong>git-scm.com</strong> y pulsa <strong>Download</strong> (detecta tu sistema).</span></label>
+        <label class="check"><input type="checkbox" data-step="git-5"><span class="ctext">Abre el archivo e instala dejando <strong>todas las opciones por defecto</strong>: <em>Siguiente → Siguiente → … → Instalar</em>. No cambies nada.</span></label>
+        <label class="check"><input type="checkbox" data-step="git-6"><span class="ctext"><strong>Cierra y vuelve a abrir VS Code.</strong> Detectará Git automáticamente.</span></label>
+
+        <div class="note"><p>Git no tiene ventana propia ni hace nada por su cuenta: trabaja «por debajo» para que VS Code pueda hablar con GitHub. Lo instalas una vez y te olvidas.</p></div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="item" id="abrir">
+      <h2 class="item-title"><span class="n">4 ·</span> Abrir VS Code y cargar tu carpeta</h2>
+      <div class="content">
+        <p>Abrir tu web significa abrir <strong>la carpeta entera</strong> del proyecto, no un archivo suelto. Así VS Code ve todos los archivos juntos.</p>
+
+        <div class="only-mac">
+          <h3>En Mac</h3>
+          <label class="check"><input type="checkbox" data-step="abr-mac-1"><span class="ctext"><strong>Abre VS Code</strong> desde el Launchpad o Finder → Aplicaciones.</span></label>
+          <label class="check"><input type="checkbox" data-step="abr-mac-2"><span class="ctext">En la bienvenida pulsa <strong>«Open Folder…»</strong> (Abrir carpeta…), o el menú <strong>File → Open Folder…</strong></span></label>
+          <label class="check"><input type="checkbox" data-step="abr-mac-3"><span class="ctext">Ve a donde guardas el proyecto (normalmente <strong>Documentos → GitHub</strong> o el <strong>Escritorio</strong>). Haz <strong>un clic</strong> sobre la carpeta para seleccionarla (sin entrar dentro) y pulsa <strong>Open</strong>.</span></label>
+          <label class="check"><input type="checkbox" data-step="abr-mac-4"><span class="ctext">Sale un aviso: <em>«Do you trust the authors of the files in this folder?»</em>. Como es tu proyecto, pulsa <strong>«Yes, I trust the authors»</strong>.</span></label>
+        </div>
+
+        <div class="only-win">
+          <h3>En Windows</h3>
+          <label class="check"><input type="checkbox" data-step="abr-win-1"><span class="ctext"><strong>Abre VS Code</strong>: botón de Inicio, escribe «Visual Studio Code» y púlsalo.</span></label>
+          <label class="check"><input type="checkbox" data-step="abr-win-2"><span class="ctext">En la bienvenida pulsa <strong>«Open Folder…»</strong> (Abrir carpeta…), o el menú <strong>File → Open Folder…</strong></span></label>
+          <label class="check"><input type="checkbox" data-step="abr-win-3"><span class="ctext">Ve a donde está el proyecto (normalmente <strong>Documentos → GitHub</strong> o el <strong>Escritorio</strong>). Selecciona la carpeta y pulsa <strong>Seleccionar carpeta</strong>.</span></label>
+          <label class="check"><input type="checkbox" data-step="abr-win-4"><span class="ctext">Sale el aviso <em>«Do you trust the authors of the files in this folder?»</em>. Pulsa <strong>«Yes, I trust the authors»</strong>.</span></label>
+        </div>
+
+        <p>Truco: también puedes <strong>arrastrar la carpeta</strong> (desde el <span class="only-mac">Finder</span><span class="only-win">Explorador de archivos</span>) y soltarla sobre la ventana de VS Code. Cuando se abra, a la izquierda (el <strong>Explorer</strong>) aparece la lista de archivos.</p>
+
+        <div class="note"><span class="lab">🔌 comprueba que tu carpeta está conectada a GitHub</span><p>Nada más abrirla, mira <strong>abajo a la izquierda</strong>, en la barra de estado: deberías ver una <strong>ramita</strong> con un nombre (normalmente <code>main</code>). Si lo ves, ¡todo en orden! Si <strong>no</strong> aparece nada de eso, puede que tengas una copia suelta sin conectar: avisa a tu técnico antes de seguir.</p></div>
+
+        <div class="note warn"><span class="lab">⚠️ errores típicos al abrir</span><p><strong>·</strong> Abrir <em>un archivo</em> en vez de <em>la carpeta</em>: usa siempre <strong>Open Folder</strong>.<br><strong>·</strong> Pulsar <em>«No»</em> en el aviso de confianza: activa el «Modo restringido» y parece que «no va nada». Pulsa <strong>«Yes, I trust the authors»</strong>.<br><strong>·</strong> Abrir una carpeta equivocada (copia vieja, Descargas…). Si dudas, pregunta antes de tocar.</p></div>
+
+        <div class="note calm"><p>Abrir VS Code y abrir la carpeta <strong>no borra, no cambia y no publica nada</strong>: solo te muestra los archivos. Si te equivocas, cierra la ventana (<kbd class="mac">⌘W</kbd><kbd class="win">Ctrl+W</kbd>) y abre otra. Nada se rompe por mirar.</p></div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="item" id="interfaz">
+      <h2 class="item-title"><span class="n">5 ·</span> La interfaz: qué estás viendo</h2>
+      <div class="content">
+        <p>La pantalla se divide en zonas fijas. No hay que aprenderse nada de memoria: con la <em>Paleta de Comandos</em> encuentras cualquier cosa escribiendo su nombre.</p>
+        <!-- Mejora futura: aquí encaja una captura anotada de VS Code con flechas a cada zona -->
+        <div class="defs">
+          <div class="def"><span class="k">Activity Bar</span><span class="v">La columna estrecha de <strong>iconos pegada al borde izquierdo</strong>. Cada icono cambia qué se muestra al lado: archivos, búsqueda, control de código, extensiones.</span></div>
+          <div class="def"><span class="k">Explorer</span><span class="v">El <strong>explorador de archivos</strong> (icono de dos hojas). Es la <strong>lista de carpetas y archivos</strong> de tu web. Haz clic en uno para abrirlo.</span></div>
+          <div class="def"><span class="k">Editor</span><span class="v">La <strong>zona grande del centro</strong>, donde se edita. Arriba, cada archivo abierto es una <strong>pestaña</strong>.</span></div>
+          <div class="def"><span class="k">Status Bar</span><span class="v">La <strong>franja de abajo</strong>. A la izquierda, la <strong>rama</strong> de Git; a la derecha aparecerá el botón <em>Go Live</em>.</span></div>
+          <div class="def"><span class="k">Source Control</span><span class="v">El icono de la <strong>ramita</strong>. Aquí ves tus cambios y los subes a GitHub (paso 8).</span></div>
+          <div class="def"><span class="k">Extensions</span><span class="v">El icono de <strong>cuatro cuadraditos</strong>. Para instalar complementos, como Live Server (paso 7).</span></div>
+          <div class="def"><span class="k">Command Palette</span><span class="v">Un buscador (<kbd class="mac">⌘⇧P</kbd><kbd class="win">Ctrl+Mayús+P</kbd>): escribe lo que quieres hacer y te lo ofrece. Tu <strong>salvavidas</strong>.</span></div>
+        </div>
+        <div class="note"><span class="lab">🧭 si «desaparece» la lista de archivos</span><p>Probablemente pulsaste sin querer <kbd class="mac">⌘B</kbd><kbd class="win">Ctrl+B</kbd>, que oculta la barra lateral. Vuelve a pulsarlo y reaparece. Cerrar una pestaña <strong>no borra el archivo</strong>, solo lo quita de la vista.</p></div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="item" id="editar">
+      <h2 class="item-title"><span class="n">6 ·</span> Editar un archivo y guardarlo</h2>
+      <div class="content">
+        <p>Editar aquí es como escribir en cualquier programa de texto. La clave es fijarse en si está <strong>guardado</strong> o no.</p>
+        <label class="check"><input type="checkbox" data-step="ed-1"><span class="ctext">En el <strong>Explorer</strong> (izquierda), haz clic en el archivo que quieras editar (un <code>.json</code> de datos, o <code>index.html</code>). Se abre en el centro.</span></label>
+        <label class="check"><input type="checkbox" data-step="ed-2"><span class="ctext">Haz clic dentro del texto y <strong>escribe con normalidad</strong>.</span></label>
+        <label class="check"><input type="checkbox" data-step="ed-3"><span class="ctext">Mira la pestaña de arriba: al cambiar algo, la <strong>X</strong> de cerrar se vuelve un <strong>punto blanco ⬤</strong> = <strong>cambios SIN GUARDAR</strong>.</span></label>
+        <label class="check"><input type="checkbox" data-step="ed-4"><span class="ctext">Pulsa <kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd> para guardar (el punto vuelve a ser X). ¿Te equivocaste? <kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd> deshace.</span></label>
+
+        <div class="note"><span class="lab">🗺️ ¿y qué archivo toco para cambiar cada cosa?</span><p>Eso depende de tu web. Pídele a tu técnico una lista corta del tipo «para cambiar X, edita el archivo Y» y apúntala aquí:</p><p style="color:var(--muted)">· ____________________ → ____________________<br>· ____________________ → ____________________</p></div>
+
+        <div class="note"><span class="lab">💾 guardar a mano es lo más seguro</span><p>Existe un guardado automático (menú <strong>File → Auto Save</strong>), pero si tocas archivos <code>.json</code> es mejor <strong>dejarlo desactivado</strong> y guardar tú con <kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd> cuando hayas revisado el cambio.</p></div>
+
+        <div class="note warn"><span class="lab">🧩 cuidado con los archivos .json</span><p>Cada cosa va con sus <strong>comillas dobles</strong> <code>"así"</code>, una <strong>coma</strong> entre elementos y <strong>nunca</strong> coma después del último. Si borras una coma o comilla, esa sección puede salir en blanco.</p><p>VS Code <strong>subraya el error en rojo</strong> y lo lista en la pestaña <em>Problems</em>. <strong>Si ves rojo, no lo subas:</strong> deshaz con <kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd>. Si dudas, pega el texto en <a href="https://jsonlint.com" target="_blank" rel="noopener">jsonlint.com</a>.</p></div>
+
+        <div class="note calm"><p>Guardar solo afecta a <strong>tu ordenador</strong>. Tu web pública <strong>no cambia</strong> hasta el paso 8, y si cierras con cambios sin guardar, VS Code te pregunta antes.</p></div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="item" id="liveserver">
+      <h2 class="item-title"><span class="n">7 ·</span> Ver tu web en local con Live Server</h2>
+      <div class="content">
+        <p>Antes de publicar, conviene ver el cambio «como se verá de verdad», pero solo en tu pantalla. Para eso se instala una extensión que abre tu web en el navegador y la <strong>refresca sola</strong> al guardar.</p>
+        <h3>Instalar la extensión (solo una vez)</h3>
+        <label class="check"><input type="checkbox" data-step="ls-1"><span class="ctext">Abre <strong>Extensions</strong>: icono de cuatro cuadraditos, o <kbd class="mac">⌘⇧X</kbd><kbd class="win">Ctrl+Mayús+X</kbd>.</span></label>
+        <label class="check"><input type="checkbox" data-step="ls-2"><span class="ctext">En el buscador escribe <strong>Live Server</strong>.</span></label>
+        <label class="check"><input type="checkbox" data-step="ls-3"><span class="ctext">Elige el que se llama exactamente <strong>«Live Server»</strong> y cuyo autor es <strong>Ritwick Dey</strong> (millones de instalaciones). Cuidado con imitaciones.</span></label>
+        <label class="check"><input type="checkbox" data-step="ls-4"><span class="ctext">Pulsa el botón azul <strong>Install</strong>. Listo en segundos.</span></label>
+        <h3>Usarlo</h3>
+        <label class="check"><input type="checkbox" data-step="ls-5"><span class="ctext">Con tu carpeta abierta, <strong>abajo a la derecha</strong> verás el botón <strong>«Go Live»</strong>. Haz clic.</span></label>
+        <label class="check"><input type="checkbox" data-step="ls-6"><span class="ctext">Se abre el navegador en una dirección tipo <code>http://127.0.0.1:5500</code>. <strong>Es solo tu ordenador</strong>; nadie de fuera la ve.</span></label>
+        <label class="check"><input type="checkbox" data-step="ls-7"><span class="ctext">A partir de ahora, al <strong>guardar</strong> (<kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd>) la página se actualiza sola. Para apagarlo, pulsa <strong>«Port: 5500»</strong> abajo a la derecha.</span></label>
+        <div class="note"><span class="lab">🖱️ ¿no ves «Go Live»?</span><p>Asegúrate de tener abierto un archivo <code>.html</code>. Alternativa que siempre funciona: <strong>clic derecho sobre <code>index.html</code></strong> → <strong>«Open with Live Server»</strong>.</p></div>
+        <div class="note calm"><p>Live Server <strong>no toca tu código ni publica nada</strong>: solo te enseña la web en tu pantalla. Para que el mundo la vea, hay que subirla a GitHub (paso 8).</p></div>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section class="item" id="subir">
+      <h2 class="item-title"><span class="n">8 ·</span> Guardar tu cambio en GitHub <span class="tag">commit + subir</span></h2>
+      <div class="content">
+        <p>Este es el paso que <strong>publica de verdad</strong>. Todo se hace con botones, sin escribir comandos. Son dos gestos: <strong>confirmar (commit)</strong> y <strong>subir (Sync Changes)</strong>.</p>
+        <!-- Mejora futura: 2-3 capturas anotadas del panel Source Control (caja Message + botón Commit, aviso de smart commit, botón Sync Changes). Es donde más se atasca la gente. -->
+
+        <div class="note warn"><span class="lab">🔑 requisito: estar dentro de tu cuenta de GitHub</span><p>Pulsa el icono de <strong>persona</strong> (<em>Accounts</em>) abajo a la izquierda → <strong>«Sign in with GitHub»</strong>. Se abre el navegador, inicias sesión y pulsas <em>Authorize</em>.</p><p>Puede que el navegador diga <em>«You may now close this window»</em> o pregunte <em>«¿Abrir Visual Studio Code?»</em>: di que <strong>sí</strong>. Si te quedas en el navegador y no pasa nada, vuelve tú a VS Code; ya estarás dentro.</p></div>
+
+        <label class="check"><input type="checkbox" data-step="up-1"><span class="ctext">Asegúrate de haber <strong>guardado</strong> (paso 6). Si la pestaña tiene un punto ⬤, aún no está guardado.</span></label>
+        <label class="check"><input type="checkbox" data-step="up-2"><span class="ctext">Haz clic en el icono de <strong>Source Control</strong> (la ramita) en la barra izquierda.</span></label>
+        <label class="check"><input type="checkbox" data-step="up-3"><span class="ctext">Bajo <strong>«Changes»</strong> verás los archivos que tocaste. Revisa que son los que esperabas (no marques nada).</span></label>
+        <label class="check"><input type="checkbox" data-step="up-4"><span class="ctext">En la caja <strong>«Message»</strong> (arriba) escribe <strong>siempre</strong> una frase corta de qué cambiaste. Ej.: <em>«Actualizo precios de servicios»</em>.</span></label>
+        <label class="check"><input type="checkbox" data-step="up-5"><span class="ctext">Pulsa el botón azul <strong>«Commit»</strong>. Esto hace una <strong>foto en tu ordenador</strong> (todavía no sube nada).</span></label>
+        <label class="check"><input type="checkbox" data-step="up-6"><span class="ctext">Puede salir un aviso: <em>«There are no staged changes to commit…?»</em>. <strong>No es un error</strong>: solo pregunta si incluye todos tus cambios. Aunque veas varios botones (<em>Yes, Always, Never</em>), pulsa <strong>«Yes»</strong>.</span></label>
+        <label class="check"><input type="checkbox" data-step="up-7"><span class="ctext">El botón azul cambia a <strong>«Sync Changes»</strong>. <strong>Púlsalo: este es el que sube tu cambio a GitHub.</strong></span></label>
+        <label class="check"><input type="checkbox" data-step="up-8"><span class="ctext"><strong>Solo la primera vez</strong> de un proyecto, en su lugar puede poner <strong>«Publish Branch»</strong>: púlsalo igual. Si pregunta entre <em>público</em> y <em>privado</em>, elige lo que te dijo tu técnico (ante la duda, pregúntale).</span></label>
+
+        <div class="note rule"><span class="lab">⭐ no confundas estos dos</span><p><strong>Commit</strong> = guardar una foto <em>en tu ordenador</em>. &nbsp;·&nbsp; <strong>Sync Changes</strong> = subirla a GitHub (y publicarla). Si solo haces <em>Commit</em>, en internet <strong>no se ve</strong> el cambio.</p></div>
+
+        <div class="note"><span class="lab">🔁 si también editas en github.com</span><p>Para no chocar versiones, <strong>antes</strong> de editar en VS Code haz un <em>Pull</em> (bajar lo último): menú de tres puntos <strong>«…»</strong> del panel Source Control → <strong>Pull</strong>.</p></div>
+
+        <div class="note calm"><p>Cada commit queda en el <strong>historial</strong>: nunca pierdes el rastro y siempre puedes volver atrás. ¿Te equivocaste en el último commit? Menú <strong>«…» → Commit → Undo Last Commit</strong>.</p></div>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section class="item" id="comprobar">
+      <h2 class="item-title"><span class="n">9 ·</span> Comprobar que se publicó</h2>
+      <div class="content">
+        <p>Subir no es instantáneo: GitHub Pages tarda un poco en montar tu web. Es normal, no es un fallo.</p>
+        <label class="check"><input type="checkbox" data-step="ch-1"><span class="ctext">Abre <strong>tu web pública</strong> en una pestaña nueva (la dirección de siempre, p.&nbsp;ej. <code>tunombre.github.io</code> o tu dominio). Si no la recuerdas, pídesela a tu técnico y guárdala en favoritos.</span></label>
+        <label class="check"><input type="checkbox" data-step="ch-2"><span class="ctext"><strong>Espera de 1 a 10 minutos</strong> (en casos raros hasta 20). Recargar mil veces no lo acelera.</span></label>
+        <label class="check"><input type="checkbox" data-step="ch-3"><span class="ctext">Si sigues viendo lo viejo, es la <strong>caché</strong>: fuerza la recarga. <span class="only-mac">Chrome/Edge <kbd>⌘⇧R</kbd>; Safari: mantén <kbd>⇧</kbd> y pulsa recargar, o ventana privada.</span><span class="only-win"><kbd>Ctrl+Mayús+R</kbd> o <kbd>Ctrl+F5</kbd>.</span></span></label>
+        <div class="note"><span class="lab">✅ ver el estado del despliegue</span><p>En <strong>github.com</strong>, dentro de tu repositorio, la pestaña <strong>Actions</strong> muestra un <strong>círculo naranja</strong> (publicando) que pasa a <strong>✓ verde</strong> cuando ya está online.</p></div>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section class="item" id="cerrar">
+      <h2 class="item-title"><span class="n">10 ·</span> Cerrar y volver otro día</h2>
+      <div class="content">
+        <p>No hay que «cerrar sesión» ni nada raro. Puedes cerrar con tranquilidad.</p>
+        <ul>
+          <li><strong>Para cerrar:</strong> que no queden puntos ⬤ sin guardar (si los hay, VS Code te avisa). Cierra la ventana. Lo que subiste a GitHub ya está a salvo online.</li>
+          <li><strong>Para volver:</strong> abre VS Code; normalmente reabre tu proyecto solo. Si arranca vacío, <strong>File → Open Recent</strong> y ahí está tu carpeta.</li>
+          <li><strong>Si retomas algo a medias:</strong> haz un <em>Pull</em> primero (paso 8) por si hubo cambios desde otro sitio.</li>
+        </ul>
+        <div class="note calm"><p>Tus archivos <strong>no se borran</strong> por cerrar VS Code ni por no verlos: la carpeta sigue en tu disco. Cerrar no publica ni deshace nada.</p></div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section class="item" id="problemas">
+      <h2 class="item-title"><span class="n">11 ·</span> Si algo se rompe (o te asusta)</h2>
+      <div class="content">
+        <p>Los sustos más típicos, con su solución. Recuerda: en Git casi todo se puede deshacer.</p>
+        <div class="faq">
+          <details>
+            <summary>He editado pero la web online no cambia <span class="qtag">lo más común</span></summary>
+            <div class="ans">
+              <p>Casi siempre falta un paso o aún se está publicando:</p>
+              <ul>
+                <li>¿Está <strong>guardado</strong>? Si la pestaña tiene un punto ⬤, pulsa <kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd>.</li>
+                <li>¿Hiciste <strong>Commit + Sync Changes</strong>? Solo guardar no basta (paso 8).</li>
+                <li>¿Esperaste el <strong>despliegue</strong>? De 1 a 10 minutos (paso 9).</li>
+                <li>¿Probaste el <strong>refresco forzado</strong>? Suele ser caché.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>No encuentro mi carpeta / mi proyecto</summary>
+            <div class="ans"><p><strong>File → Open Recent</strong>: suele estar ahí. Si no, <strong>File → Open Folder…</strong> y búscala (normalmente <em>Documentos → GitHub</em> o el Escritorio). Nada se ha borrado por no verlo. Si de verdad no aparece, pide a tu técnico la ruta exacta.</p></div>
+          </details>
+          <details>
+            <summary>Me pide iniciar sesión en GitHub</summary>
+            <div class="ans"><p>Es <strong>normal</strong> cada cierto tiempo. Pulsa <strong>«Sign in with GitHub»</strong>, inicia sesión y dale a <em>Authorize</em>. Pero si te pide cosas raras (códigos, <em>tokens</em>…), <strong>para y avisa a tu técnico</strong>. Dejarlo a medias no rompe nada.</p></div>
+          </details>
+          <details>
+            <summary>Veo un «conflicto» con colores raros <span class="qtag">llama al técnico</span></summary>
+            <div class="ans"><p>Pasa cuando un archivo se cambió en dos sitios a la vez. Verás bloques de colores y botones <em>Accept Current / Incoming Change</em>. <strong>No es grave y aún no se ha perdido nada</strong>, pero resolverlo mal mezcla versiones. Si no eres técnico: <strong>no toques nada y avisa</strong>. Salida segura: cerrar el archivo <strong>sin guardar</strong>.</p></div>
+          </details>
+          <details>
+            <summary>He roto un JSON y una sección sale en blanco</summary>
+            <div class="ans">
+              <p>Suele ser una coma o comilla de más/de menos. Fácil de arreglar:</p>
+              <ul>
+                <li><strong>Deshaz:</strong> <kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd> varias veces, y guarda.</li>
+                <li><strong>Localiza el fallo:</strong> pega el contenido en <a href="https://jsonlint.com" target="_blank" rel="noopener">jsonlint.com</a> → <em>Validate</em>; te marca la línea. O mira la pestaña <em>Problems</em>.</li>
+                <li><strong>Si ya está online y roto:</strong> en github.com, abre el archivo, pulsa <em>History</em> y restaura la versión buena; o usa <em>Revert</em> en el commit que lo rompió.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Aparecen archivos raros tipo <code>.DS_Store</code></summary>
+            <div class="ans"><p>Son archivos invisibles que crea el Mac solo. <strong>No rompen la web.</strong> No los marques al hacer commit, y pide a tu técnico que añada <code>.DS_Store</code> al <code>.gitignore</code>.</p></div>
+          </details>
+          <details>
+            <summary>El botón «Go Live» no aparece</summary>
+            <div class="ans"><p>Go Live es de Live Server y solo <strong>previsualiza</strong> en tu ordenador. Comprueba: que tengas abierto un <code>.html</code>; que la extensión esté instalada (paso 7). Alternativa: <strong>clic derecho sobre <code>index.html</code> → «Open with Live Server»</strong>.</p></div>
+          </details>
+        </div>
+        <div class="note rule"><span class="lab">⭐ cuando dudes</span><p>Cerrar sin guardar siempre es seguro. Una web estática es muy robusta y Git guarda todo el historial: <strong>nada es definitivo</strong>. Haz una captura y pregunta a tu técnico — no molestas.</p></div>
+      </div>
+    </section>
+
+    <!-- 12 -->
+    <section class="item" id="glosario">
+      <h2 class="item-title"><span class="n">12 ·</span> Glosario mínimo</h2>
+      <div class="content">
+        <p>Las palabras que más se repiten, en cristiano.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Palabra</th><th>Qué significa</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Repositorio</strong></td><td>La carpeta con todos los archivos de tu web (en tu ordenador y en GitHub).</td></tr>
+              <tr><td><strong>Commit</strong></td><td>«Hacer una foto» de tus cambios con una notita. Es local: aún no sube nada.</td></tr>
+              <tr><td><strong>Push / Sync</strong></td><td>Subir tus commits a GitHub. Es lo que publica de verdad.</td></tr>
+              <tr><td><strong>Pull</strong></td><td>Bajar a tu ordenador lo último que haya en GitHub. Hazlo antes de editar si tocaste algo en otro sitio.</td></tr>
+              <tr><td><strong>Rama / branch</strong></td><td>Una versión del proyecto. La principal es <code>main</code> y es la que se publica.</td></tr>
+              <tr><td><strong>Deploy</strong></td><td>El proceso (1–10 min) por el que GitHub convierte tus archivos en tu web pública.</td></tr>
+              <tr><td><strong>Extensión</strong></td><td>Un complemento de VS Code. La única que necesitas es <em>Live Server</em>.</td></tr>
+              <tr><td><strong>Caché</strong></td><td>Copia que guarda el navegador para ir rápido. Por eso a veces ves lo viejo: fuérzalo con un refresco.</td></tr>
+              <tr><td><strong>JSON</strong></td><td>Un archivo de texto donde viven los contenidos. Muy quisquilloso con comas y comillas.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Atajos que vale la pena recordar</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Para…</th><th>Pulsa</th></tr></thead>
+            <tbody>
+              <tr><td>Guardar</td><td><kbd class="mac">⌘S</kbd><kbd class="win">Ctrl+S</kbd></td></tr>
+              <tr><td>Deshacer</td><td><kbd class="mac">⌘Z</kbd><kbd class="win">Ctrl+Z</kbd></td></tr>
+              <tr><td>Paleta de Comandos</td><td><kbd class="mac">⌘⇧P</kbd><kbd class="win">Ctrl+Mayús+P</kbd></td></tr>
+              <tr><td>Mostrar/ocultar archivos</td><td><kbd class="mac">⌘B</kbd><kbd class="win">Ctrl+B</kbd></td></tr>
+              <tr><td>Abrir Source Control</td><td><kbd class="mac">⌃⇧G</kbd><kbd class="win">Ctrl+Mayús+G</kbd> <span class="only-mac" style="color:var(--muted)">(en Mac es Control ⌃, no ⌘)</span></td></tr>
+              <tr><td>Forzar recarga del navegador</td><td><kbd class="mac">⌘⇧R</kbd><kbd class="win">Ctrl+Mayús+R</kbd> <span class="only-mac" style="color:var(--muted)">· Safari: ⇧ + recargar</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="endbar">
+    <p class="progress" id="progress"></p>
+    <button class="restart" onclick="resetChecks()">reiniciar marcas ✓</button>
+  </div>
+
+  <div class="footer">
+    <p>¿Atascada/o? Haz una captura de la pantalla y escríbele a tu técnico. La parte de <em>contenido</em> la llevas tú; el <em>código y el diseño</em>, la parte técnica.</p>
+    <a class="sig" href="https://meowrhino.studio" target="_blank" rel="noopener">meowrhino.studio</a>
+    <p class="extra">VS Code se actualiza a menudo, así que algún botón puede verse un pelín distinto al de esta guía: no te asustes, la idea es la misma.</p>
+  </div>
+
+</main>
+
+<button class="totop" id="totop" title="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  function setOS(os){
+    const el=document.documentElement;
+    el.classList.toggle('os-mac', os==='mac');
+    el.classList.toggle('os-win', os==='win');
+    syncOSButtons();
+    try{ localStorage.setItem('guia-os', os); }catch(e){}
+  }
+  function syncOSButtons(){
+    const win=document.documentElement.classList.contains('os-win');
+    document.getElementById('btn-mac').classList.toggle('active', !win);
+    document.getElementById('btn-win').classList.toggle('active', win);
+  }
+  syncOSButtons();
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      navigator.clipboard.writeText(b.dataset.copy).then(()=>{
+        const o=b.textContent; b.textContent='¡copiado!'; setTimeout(()=>b.textContent=o,1300);
+      }).catch(()=>{});
+    });
+  });
+
+  // Checkbox persistence
+  const KEY='guia-vscode-checks';
+  const boxes=[...document.querySelectorAll('.check input[type=checkbox]')];
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function save(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){} }
+  function updateProgress(){
+    const done=boxes.filter(b=>b.checked).length;
+    document.getElementById('progress').textContent = done+' de '+boxes.length+' pasos marcados';
+  }
+  (function initChecks(){
+    const s=load();
+    boxes.forEach(b=>{ if(s[b.dataset.step]) b.checked=true; });
+    boxes.forEach(b=>b.addEventListener('change', ()=>{
+      const s=load(); s[b.dataset.step]=b.checked; save(s); updateProgress();
+    }));
+    updateProgress();
+  })();
+  function resetChecks(){ boxes.forEach(b=>b.checked=false); save({}); updateProgress(); }
+
+  // Back to top
+  const totop=document.getElementById('totop');
+  window.addEventListener('scroll', ()=>{ totop.classList.toggle('show', window.scrollY>700); }, {passive:true});
+</script>
+</body>
+</html>
